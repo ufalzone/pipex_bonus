@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/ugo/Documents/42/libft/output/ft_strlen'
+relocations:     []
+...
