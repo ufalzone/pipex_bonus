@@ -6,7 +6,7 @@
 /*   By: ufalzone <ufalzone@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 23:29:52 by ufalzone          #+#    #+#             */
-/*   Updated: 2025/02/09 16:01:12 by ufalzone         ###   ########.fr       */
+/*   Updated: 2025/02/09 19:02:21 by ufalzone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,14 @@ char	*find_command_path(char *cmd, char **env)
 		i++;
 	if (!env[i])
 		return (NULL);
-	path_line = env[i] + 5;           // pour skip le PATH=
-	paths = ft_split(path_line, ':'); // separe tous les chemins de PATH
+	path_line = env[i] + 5;
+	paths = ft_split(path_line, ':');
 	if (!paths)
 		return (free_split(paths), NULL);
 	i = 0;
 	while (paths[i])
-	// on va tester tous les paths pour voir si la commande existe
 	{
 		full_path = ft_strjoin_three(paths[i], "/", cmd);
-		// rajoute a la fin de path un "/" et la commande appropriee
 		if (access(full_path, X_OK) == 0)
 			return (free_split(paths), full_path);
 		free(full_path);
@@ -82,6 +80,7 @@ void	exec_cmd(char *str, char **env, int *p_fd)
 	{
 		free_split(cmd_args);
 		exit(127);
+		perror("Command not found");
 	}
 	execve_status = execve(cmd_path, cmd_args, env);
 	if (execve_status == -1)
@@ -111,7 +110,7 @@ void	create_pipe(char *str, char **env)
 	}
 	else
 	{
-		// waitpid(pid, NULL, 0);
+		waitpid(pid, NULL, 0);
 		close(p_fd[1]);
 		dup2(p_fd[0], STDIN_FILENO);
 		close(p_fd[0]);
@@ -170,7 +169,7 @@ void	pipex(int ac, char **av, char **env)
 			ft_perror("Usage: ./pipex here_doc LIMITER cmd1 cmd2 outfile");
 		fd = here_doc(av[2], ac);
 		mode = 2;
-		i += 2;
+		i ++;
 	}
 	else
 	{
